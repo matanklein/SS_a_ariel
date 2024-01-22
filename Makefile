@@ -3,23 +3,33 @@ AR=ar
 OBJECTS_MAIN=main.o
 OBJECTS_LIB_LOOP=basicClassification.o advancedClassificationLoop.o
 OBJECTS_LIB_RECURSION=basicClassification.o advancedClassificationRecursion.o
-FLAGS = -Wall
+FLAGS = -Wall -g
 
 
 all: loops recursives recursived loopd mains maindloop maindrec
 
-loops: $(OBJECTS_LIB_LOOP)
+loops: libclassloops.a
+libclassloops.a: $(OBJECTS_LIB_LOOP)
 	$(AR) -rcs libclassloops.a $(OBJECTS_LIB_LOOP)
-recursives: $(OBJECTS_LIB_RECURSION)
+
+recursives: libclassrec.a
+libclassrec.a: $(OBJECTS_LIB_RECURSION) 
 	$(AR) -rcs libclassrec.a $(OBJECTS_LIB_RECURSION)
-recursived: $(OBJECTS_LIB_RECURSION)
+
+recursived: libclassrec.so
+libclassrec.so: $(OBJECTS_LIB_RECURSION) 
 	$(CC) -shared -o libclassrec.so $(OBJECTS_LIB_RECURSION)
-loopd: $(OBJECTS_LIB_LOOP)
+
+loopd: libclassloops.so
+libclassloops.so: $(OBJECTS_LIB_LOOP) 
 	$(CC) -shared -o libclassloops.so $(OBJECTS_LIB_LOOP)
-mains: $(OBJECTS_MAIN) libclassrec.a
+
+mains: libclassrec.a $(OBJECTS_MAIN)
 	$(CC) $(FLAGS) -o mains $(OBJECTS_MAIN) libclassrec.a
+
 maindloop: $(OBJECTS_MAIN)
 	$(CC) $(FLAGS) -o maindloop $(OBJECTS_MAIN) ./libclassloops.so
+	
 maindrec: $(OBJECTS_MAIN)
 	$(CC) $(FLAGS) -o maindrec $(OBJECTS_MAIN) ./libclassrec.so
 
