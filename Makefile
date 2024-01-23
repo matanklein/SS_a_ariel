@@ -37,9 +37,9 @@ main.o: main.c NumClass.h
 	$(CC) $(FLAGS) -c main.c
 basicClassification.o: basicClassification.c NumClass.h
 	$(CC) $(FLAGS) -fPIC -c basicClassification.c
-advancedClassificationLoop.o: advancedClassificationLoop.o NumClass.h
+advancedClassificationLoop.o: advancedClassificationLoop.c NumClass.h
 	$(CC) $(FLAGS) -fPIC -c advancedClassificationLoop.c
-advancedClassificationRecursion.o: advancedClassificationRecursion.o NumClass.h
+advancedClassificationRecursion.o: advancedClassificationRecursion.c NumClass.h
 	$(CC) $(FLAGS) -fPIC -c advancedClassificationRecursion.c
 
 clean:
