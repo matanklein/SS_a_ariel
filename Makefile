@@ -5,6 +5,7 @@ OBJECTS_LIB_LOOP=basicClassification.o advancedClassificationLoop.o
 OBJECTS_LIB_RECURSION=basicClassification.o advancedClassificationRecursion.o
 FLAGS = -Wall -g
 
+.PHONY: clean
 
 all: loops recursives recursived loopd mains maindloop maindrec
 
