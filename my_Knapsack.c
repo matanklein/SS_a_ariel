@@ -51,17 +51,9 @@ int main(){
 }
 
 int knapSack(int weights[],int values[], int selected_bool[]){
-    int dynamicTable[LENGTH][WEIGHT+1];
+    int dynamicTable[LENGTH][WEIGHT+1] = {0};
     
-    for (size_t i = 0; i < LENGTH; i++)
-    {
-        for (size_t j = 0; j <= WEIGHT; j++)
-        {
-            dynamicTable[i][j] = 0;
-        }
-        
-    }
-    
+    //creating the dynamic table
     for (size_t i = 0; i < LENGTH; i++)
     {
         for (size_t j = 0; j <= WEIGHT; j++)
@@ -99,23 +91,29 @@ int knapSack(int weights[],int values[], int selected_bool[]){
         printf("\n");
         
     }
-    ////////////////////////////////////////////////////////////////////////////////////
-    for (size_t i = LENGTH - 1; i >= 0; i--){
-    int j = 20;
-    if(i == 0 || dynamicTable[i][j] == 0){
-        selected_bool[i] = 0;
-        break;
-    }else{
-        selected_bool[i] = 1;
-        break;
-    }
-        if(dynamicTable[i][j] == dynamicTable[i-1][j]){
-            selected_bool[i] = 0;
-        }else{
-            j = j - weights[i];
-            selected_bool[i] = 1;
+
+    //tracking down the path to know which items were taken
+    int currWeight = 20;
+    int index = 4;
+    while(index >= 0){
+        int withOuti = 0;
+        if(index == 0){
+            if(dynamicTable[index][currWeight] == values[index]){
+                selected_bool[index] = 1;
+                break;
+            }else{
+                selected_bool[index] = 0;
+                break;
+            }
         }
-    
+        withOuti = dynamicTable[index-1][currWeight];
+        if(dynamicTable[index][currWeight] == withOuti){
+            selected_bool[index] = 0;
+        }else {
+            selected_bool[index] = 1;
+            currWeight = currWeight - weights[index];
+        }
+        index--;
     }
     
     return dynamicTable[LENGTH-1][WEIGHT];
