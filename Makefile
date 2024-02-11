@@ -15,7 +15,7 @@ my_mat.o: my_mat.c my_mat.h
 my_Knapsack: my_Knapsack.o
 	$(CC) $(FLAGS) -o my_Knapsack my_Knapsack.o
 
-my_Knapsack.o: my_Knapsack.c mat.h
+my_Knapsack.o: my_Knapsack.c my_mat.h
 	$(CC) $(FLAGS) -c my_Knapsack.c
 
 clean:
