@@ -1,17 +1,22 @@
 CC = gcc
-OBJECTS_MAIN = main.o
 FLAGS = -Wall -g
 
-all: connections
+all: connections my_Knapsack
 
-connections: $(OBJECTS_MAIN) my_mat.o
-	$(CC) $(FLAGS) -o connections $(OBJECTS_MAIN) my_mat.o
+my_graph: my_graph.o my_mat.o
+	$(CC) $(FLAGS) -o connections my_graph.o my_mat.o
 
-$(OBJECTS_MAIN): main.c my_mat.h
-	$(CC) $(FLAGS) -c main.c
+my_graph.o: my_graph.c my_mat.h
+	$(CC) $(FLAGS) -c my_graph.c
 
 my_mat.o: my_mat.c my_mat.h
 	$(CC) $(FLAGS) -c my_mat.c
 
+my_Knapsack: my_Knapsack.o
+	$(CC) $(FLAGS) -o my_Knapsack my_Knapsack.o
+
+my_Knapsack.o: my_Knapsack.c mat.h
+	$(CC) $(FLAGS) -c my_Knapsack.c
+
 clean:
-	rm -f *.o connections
+	rm -f *.o connections my_Knapsack
