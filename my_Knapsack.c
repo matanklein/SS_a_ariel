@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "my_mat.h"
 #define WEIGHT 20
 #define LENGTH 5
 
