@@ -1,0 +1,10 @@
+{
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/home/matan/Desktop/SS_a_ariel",
+            "binaryPath": "/home/matan/Desktop/SS_a_ariel/connections.out",
+            "binaryArgs": []
+        }
+    ],
+    "C_Cpp.errorSquiggles": "disabled"
+}
