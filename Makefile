@@ -1,22 +1,17 @@
 CC = gcc
 FLAGS = -Wall -g
 
-all: 
+all: StrList
 
-# my_graph: my_graph.o my_mat.o
-# 	$(CC) $(FLAGS) -o my_graph my_graph.o my_mat.o
+StrList: StrList.o Main.o
+	$(CC) $(FLAGS) -o $@ $^
 
-# my_graph.o: my_graph.c my_mat.h
-# 	$(CC) $(FLAGS) -c my_graph.c
+StrList.o: StrList.c StrList.h
+	$(CC) $(FLAGS) -c StrList.c
 
-# my_mat.o: my_mat.c my_mat.h
-# 	$(CC) $(FLAGS) -c my_mat.c
+Main.o: Main.c StrList.h
+	$(CC) $(FLAGS) -c Main.c
 
-# my_Knapsack: my_Knapsack.o
-# 	$(CC) $(FLAGS) -o my_Knapsack my_Knapsack.o
-
-# my_Knapsack.o: my_Knapsack.c my_mat.h
-# 	$(CC) $(FLAGS) -c my_Knapsack.c
 
 clean:
-	rm -f *.o 
+	rm -f *.o StrList

@@ -18,6 +18,13 @@ void Node_free(Node* node) {
 	free(node);
 }
 
+StrList* StrList_alloc(){
+	StrList* list = (StrList*)malloc(sizeof(StrList));
+	list->_head = NULL;
+	list->_size = 0;
+	return list;
+}
+
 void StrList_free(StrList* StrList){
     if (StrList==NULL) return;
 	Node* p1= StrList->_head;
