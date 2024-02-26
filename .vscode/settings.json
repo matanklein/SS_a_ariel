@@ -4,6 +4,11 @@
             "cwd": "/home/matan/Desktop/SS_a_ariel",
             "binaryPath": "/home/matan/Desktop/SS_a_ariel/connections.out",
             "binaryArgs": []
+        },
+        {
+            "cwd": "/home/matan/Desktop/SS_a_ariel",
+            "binaryPath": "/home/matan/Desktop/SS_a_ariel/StrList",
+            "binaryArgs": []
         }
     ],
     "C_Cpp.errorSquiggles": "disabled"

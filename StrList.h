@@ -28,7 +28,7 @@ typedef struct _StrList {
     size_t _size;
 }StrList;
 
-
+Node* Node_alloc(const char* data, Node* next);
 /*
  * Allocates a new empty StrList.
  * It's the user responsibility to free it with StrList_free.

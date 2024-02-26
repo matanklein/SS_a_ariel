@@ -1,41 +1,57 @@
 #include <stdio.h>
 #include "StrList.h"
 #include <string.h>
+
 #define maxLength 501
 
-int main(){
+int main()
+{
     int option;
-    StrList* list = StrList_alloc();
-    char str[maxLength];
-    char* word;
+    StrList *list = StrList_alloc();
     int index;
-    if(scanf("%d", &option) == EOF){
+    //char *word;
+    char str[maxLength];
+    if (scanf("%d", &option) == EOF)
+    {
         StrList_free(list);
         return 0;
     }
-    while(option != 0){
+    while (option != 0)
+    {
+        
+
         switch (option)
         {
-        case 1: 
+        case 1:
+
             int sizeOfWords = 0;
             scanf("%d", &sizeOfWords);
 
-            for (size_t i = 0; i < sizeOfWords; i++)
+            int count = 0;
+            while (count < sizeOfWords)
             {
                 scanf("%s", str);
-                word = (char*)malloc(strlen(str) + 1);
-                if(word == NULL){break;}
+                char *word = (char*)malloc(strlen(str) + 1);
+                if (word == NULL)
+                {
+                    return 0;
+                }
+                
                 strcpy(word, str);
                 StrList_insertLast(list, word);
+                count++;
             }
-            
+
             break;
 
         case 2:
             scanf("%d", &index);
             scanf("%s", str);
-            word = (char*)malloc(strlen(str) + 1);
-            if(word == NULL){break;}
+            char *word = (char *)malloc(strlen(str) + 1);
+            if (word == NULL)
+            {
+                break;
+            }
             strcpy(word, str);
             StrList_insertAt(list, word, index);
             break;
@@ -59,8 +75,11 @@ int main(){
 
         case 7:
             scanf("%s", str);
-            word = (char*)malloc(strlen(str) + 1);
-            if(word == NULL){break;}
+            word = (char *)malloc(strlen(str) + 1);
+            if (word == NULL)
+            {
+                break;
+            }
             strcpy(word, str);
             printf("%d", StrList_count(list, word));
             free(word);
@@ -69,8 +88,11 @@ int main(){
 
         case 8:
             scanf("%s", str);
-            word = (char*)malloc(strlen(str) + 1);
-            if(word == NULL){break;}
+            word = (char *)malloc(strlen(str) + 1);
+            if (word == NULL)
+            {
+                break;
+            }
             strcpy(word, str);
             StrList_remove(list, word);
             free(word);
@@ -96,7 +118,11 @@ int main(){
         case 13:
             printf("%d", StrList_isSorted(list));
             break;
-
+        }
+        if (scanf("%d", &option) == EOF)
+        {
+            StrList_free(list);
+            return 0;
         }
     }
     StrList_free(list);

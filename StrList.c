@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include "StrList.h"
 #include <string.h>
 #include <stdio.h>
@@ -38,9 +37,9 @@ size_t StrList_size(const StrList* StrList){
 	return StrList->_size;
 }
 
-Node* Node_alloc(char* data, Node* next) {
-	Node* p= (Node*)malloc(sizeof(Node));
-	p->_data = data;
+Node* Node_alloc(const char* data, Node* next) {
+	Node* p = (Node*)malloc(sizeof(Node));
+	p->_data = (char*)data;
 	p->_next = next;
 	return p;
 }
@@ -54,14 +53,20 @@ void StrList_insertLast(StrList* StrList, const char* data){
 		StrList->_head = newNode;
 		StrList->_size = 1;
 	}else{
-		Node* curr = StrList->_head;
-		while (curr->_next)
-		{
-			curr = curr->_next;
+		if(StrList->_size == 0){
+			Node* newNode = Node_alloc(data, NULL);
+			StrList->_head = newNode;
+			StrList->_size = 1;
+		}else{
+			Node* curr = StrList->_head;
+			while (curr->_next)
+			{
+				curr = curr->_next;
+			}
+			Node* newNode = Node_alloc(data, NULL);
+			curr->_next = newNode;
+			StrList->_size++;
 		}
-		Node* newNode = Node_alloc(data, NULL);
-		curr->_next = newNode;
-		StrList->_size++;
 	}
 }
 
