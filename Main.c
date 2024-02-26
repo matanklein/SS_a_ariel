@@ -61,7 +61,7 @@ int main()
             break;
 
         case 4:
-            printf("%ld", StrList_size(list));
+            printf("%ld\n", StrList_size(list));
             break;
 
         case 5:
@@ -70,7 +70,7 @@ int main()
             break;
 
         case 6:
-            printf("%d", StrList_printLen(list));
+            printf("%d\n", StrList_printLen(list));
             break;
 
         case 7:
@@ -81,7 +81,7 @@ int main()
                 break;
             }
             strcpy(word, str);
-            printf("%d", StrList_count(list, word));
+            printf("%d\n", StrList_count(list, word));
             free(word);
 
             break;
@@ -116,7 +116,7 @@ int main()
             break;
 
         case 13:
-            printf("%d", StrList_isSorted(list));
+            printf("%d\n", StrList_isSorted(list));
             break;
         }
         if (scanf("%d", &option) == EOF)
