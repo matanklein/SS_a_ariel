@@ -9,7 +9,6 @@ int main()
     int option;
     StrList *list = StrList_alloc();
     int index;
-    //char *word;
     char str[maxLength];
     if (scanf("%d", &option) == EOF)
     {
@@ -116,7 +115,13 @@ int main()
             break;
 
         case 13:
-            printf("%d\n", StrList_isSorted(list));
+            int ans;
+            ans = StrList_isSorted(list);
+            if(ans == 1){
+                printf("true\n");
+            }else{
+                printf("false\n");
+            }
             break;
         }
         if (scanf("%d", &option) == EOF)
@@ -125,6 +130,7 @@ int main()
             return 0;
         }
     }
+    if(list)
     StrList_free(list);
     return 0;
 }

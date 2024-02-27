@@ -4,7 +4,10 @@
 
 
 void Node_free(Node* node) {
-	free(node);
+	if(node != NULL){
+		free(node->_data);
+		free(node);
+	}
 }
 
 StrList* StrList_alloc(){
@@ -15,16 +18,21 @@ StrList* StrList_alloc(){
 }
 
 void StrList_free(StrList* StrList){
-    if (StrList==NULL) return;
-	Node* p1= StrList->_head;
-	Node* p2;
-	while(p1) { 
-		p2 = p1;
-		free(p1->_data);
-		p1 = p1->_next;
-		Node_free(p2);
+    if (StrList == NULL) return;
+	if(StrList->_size == 0){
+		free(StrList);
+		return;
 	}
-	free(StrList);
+	Node* curr = StrList->_head;
+	Node* temp;
+	while(curr) { 
+		temp = curr;
+		curr = curr->_next;
+		free(temp->_data);
+		free(temp);
+	}
+	StrList->_head = NULL;
+	StrList->_size = 0;
 }
 
 /*
@@ -39,7 +47,7 @@ size_t StrList_size(const StrList* StrList){
 
 Node* Node_alloc(const char* data, Node* next) {
 	Node* p = (Node*)malloc(sizeof(Node));
-	p->_data = (char*)data;
+	p->_data = strdup(data);
 	p->_next = next;
 	return p;
 }
@@ -74,13 +82,20 @@ void StrList_insertLast(StrList* StrList, const char* data){
 * Inserts an element at given index
 */
 void StrList_insertAt(StrList* StrList, const char* data, int index){
-	if(StrList == NULL || StrList->_size <= index){
+	if(StrList == NULL || StrList->_size < index){
 		StrList_insertLast(NULL, data);
 	}else{
+		if(index == 0){
+			Node* p = Node_alloc(data,StrList->_head);
+			StrList->_head = p;
+			StrList->_size++;
+			return;	
+		}
 		Node* curr = StrList->_head;
-		int counter = 0;
+		int counter = 1;
 		while(counter < index){
 			curr = curr->_next;
+			counter++;
 		}
 		Node* p = Node_alloc(data,curr->_next);
 		curr->_next = p;
@@ -102,7 +117,10 @@ char* StrList_firstData(const StrList* StrList){
  * Prints the StrList to the standard output.
  */
 void StrList_print(const StrList* StrList){
-	if(StrList == NULL || StrList->_size == 0){return;}
+	if(StrList == NULL || StrList->_size == 0){
+		printf("\n");
+		return;
+	}
 	Node *curr = StrList->_head;
 		printf("%s", curr->_data);
 		curr = curr->_next;
@@ -114,7 +132,7 @@ void StrList_print(const StrList* StrList){
 }
 
 /*
- Prints the word at the given index to the standard output.
+ Prints the _data at the given index to the standard output.
 */
 void StrList_printAt(const StrList* Strlist,int index){
 	if(Strlist == NULL || Strlist->_size == 0){
@@ -122,8 +140,9 @@ void StrList_printAt(const StrList* Strlist,int index){
 	}else{
 		Node* curr = Strlist->_head;
 		int counter = 0;
-		while(counter <= index){
+		while(counter < index){
 			curr = curr->_next;
+			counter++;
 		}
 		printf("%s\n", curr->_data);
 	}
@@ -172,20 +191,20 @@ void StrList_remove(StrList* StrList, const char* data){
 		temp = curr;
 		StrList->_head = curr->_next;
 		curr = curr->_next;
-		free(temp->_data);
 		Node_free(temp);
 		StrList->_size--;
 	}
-	while(curr->_next && strcmp(curr->_next->_data, data) == 0)
-	{
-		temp = curr->_next;
-		curr->_next = curr->_next->_next;
-		free(temp->_data);
-		Node_free(temp);
-		StrList->_size--;
-	}
-	
-
+	while(curr && curr->_next){
+        if(strcmp(curr->_next->_data, data) == 0){
+            temp = curr->_next;
+            curr->_next = curr->_next->_next;
+            Node_free(temp);
+            StrList->_size--;
+        }
+        else {
+            curr = curr->_next;
+        }
+    }
 }
 
 /*
@@ -193,27 +212,26 @@ void StrList_remove(StrList* StrList, const char* data){
 */
 void StrList_removeAt(StrList* StrList, int index){
 	if(StrList == NULL || StrList->_size == 0){return;}
-	if(StrList->_size < index){return;}
+	if(StrList->_size <= index){return;}
 
 	Node* curr = StrList->_head;
 	if(index == 0){
 		StrList->_head = StrList->_head->_next;
-		free(curr->_data);
 		Node_free(curr);
 		StrList->_size--;
-		return;
+	}else{
+		int counter = 0;
+		while(counter + 1< index)
+		{
+			curr  = curr->_next;
+			counter++;
+		}
+		Node* temp = curr->_next;
+		curr->_next = curr->_next->_next;
+		Node_free(temp);
+		StrList->_size--;
 	}
-	int counter = 0;
-	while(counter < index)
-	{
-		curr  = curr->_next;
-		counter++;
-	}
-	Node* temp = curr->_next;
-	curr->_next = curr->_next->_next;
-	free(temp->_data);
-	Node_free(temp);
-	StrList->_size--;
+	
 }
 
 /*
@@ -251,12 +269,11 @@ StrList* StrList_clone(const StrList* Strlist){
 	}
 	StrList* cloneList = StrList_alloc();
 	Node* curr = Strlist->_head;
-	for (size_t i = 0; i < Strlist->_size; i++)
+	while(curr)
 	{
 		char* cloneData = (char*)malloc(strlen(curr->_data) + 1);
 		StrList_insertLast(cloneList, strcpy(cloneData, curr->_data));
 		curr = curr->_next;
-		free(cloneData);
 	}
 	cloneList->_size = Strlist->_size;
 	return cloneList;
@@ -266,65 +283,71 @@ StrList* StrList_clone(const StrList* Strlist){
 /*
  * Reverces the given StrList. 
  */
-void StrList_reverse( StrList* Strlist){
-	if(Strlist == NULL || Strlist->_size == 0){return;}
-	int size = Strlist->_size -1 ; 
-	StrList* newList = StrList_clone(Strlist); 
-	Node* curr = Strlist->_head;
-	for (size_t i = 0; i < Strlist->_size; i++)
-	{
-		char* cloneData = (char*)malloc(strlen(curr->_data) + 1);
-		StrList_insertAt(Strlist,strcpy(cloneData, curr->_data), size);
-		curr = curr->_next;
-		free(cloneData);
-		size--;
-	}
-	StrList_free(newList);
-	
+void StrList_reverse(StrList* Strlist) {
+    if (Strlist == NULL || Strlist->_size <= 1) {
+        return;  
+    }
+    Node* prev = NULL;
+    Node* current = Strlist->_head;
+    Node* next = NULL;
+    while (current != NULL) {
+        next = current->_next;  
+        current->_next = prev;  
+        prev = current;
+        current = next;
+    }
+
+    Strlist->_head = prev; 
 }
 
 /*
  * Sort the given list in lexicographical order 
  */
-void StrList_sort( StrList* Strlist){
-	if(Strlist == NULL || Strlist->_size == 0){return ;}
-	if(Strlist->_size <= 1){return;}
-	StrList* newList = StrList_clone(Strlist);
-	Node* curr = Strlist->_head;
-	Node* minNode = Strlist->_head;
-	StrList_free(Strlist);
-	while (newList->_size > 0)
-	{
-		int j = 0;
-		minNode = newList->_head;
-		curr = newList->_head;
-		for (int i = 0; i < newList->_size; i++)
-		{
-			if(strcmp(curr->_data, minNode->_data) < 0){
-				minNode = curr;
-				j = i;
-			}
-			curr = curr->_next;
-		}
-		char* cloneData = (char*)malloc(strlen(minNode->_data) + 1);
-		StrList_insertLast(Strlist, strcpy(cloneData, minNode->_data));
-		free(cloneData);
-		StrList_removeAt(newList,j);
-	}
-	
+void StrList_sort( StrList* Strlist)
+{	
+	if(Strlist == NULL){return;}
+    if(Strlist->_size==1 || Strlist->_size==0)
+        return;
+    Node* sorted = NULL; // Initialize sorted list
+
+    // Traverse the original list
+    Node* current = Strlist->_head;
+    while (current != NULL) {
+        Node* nextNode = current->_next; // Store the next node before modifying the current node
+
+        // Insert current node into the sorted list
+        if (sorted == NULL || strcmp(current->_data, sorted->_data) < 0) {
+            current->_next = sorted;
+            sorted = current;
+        } else {
+            Node* temp = sorted;
+            while (temp->_next != NULL && strcmp(current->_data, temp->_next->_data) >= 0) {
+                temp = temp->_next;
+            }
+            current->_next = temp->_next;
+            temp->_next = current;
+        }
+
+        current = nextNode; // Move to the next node in the original list
+    }
+    Strlist->_head=sorted;
 }
 
 /*
  * Checks if the given list is sorted in lexicographical order
  * returns 1 for sorted,   0 otherwise
  */
-int StrList_isSorted(StrList* Strlist){
-	if(Strlist == NULL || Strlist->_size == 0){return 1;}
-	int ans = 0;
-	StrList* newList = StrList_clone(Strlist);
-	StrList_sort(newList);
-	ans = StrList_isEqual(newList, Strlist);
-	StrList_free(newList);
-	if(ans == 0){return 0;}
-	return 1;
+int StrList_isSorted(StrList* Strlist) {
+    if (Strlist == NULL || Strlist->_size <= 1) {
+        return 1; 
+    }
+    Node* current = Strlist->_head;
+    while (current != NULL && current->_next != NULL) {
+        if (strcmp(current->_data, current->_next->_data) > 0) {
+            return 0; 
+        }
+        current = current->_next;
+    }
+
+    return 1; 
 }
