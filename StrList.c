@@ -239,9 +239,10 @@ void StrList_removeAt(StrList* StrList, int index){
  * returns 0 if not and any other number if yes
  */
 int StrList_isEqual(const StrList* StrList1, const StrList* StrList2){
+	if(StrList1 == NULL && StrList2 == NULL){return 1;}
 	if((StrList1 == NULL && StrList2 != NULL) || (StrList1 != NULL && StrList2 == NULL) ||
 	 (StrList1->_size == 0 && StrList2->_size != 0) || (StrList2->_size == 0 && StrList1->_size != 0)){return 0;}
-	if((StrList1 == NULL && StrList2 == NULL) || (StrList2->_size == 0 && StrList1->_size == 0)){return 1;}
+	if(StrList2->_size == 0 && StrList1->_size == 0){return 1;}
 	if(StrList1->_size != StrList2->_size){return 0;}
 	Node* curr1 = StrList1->_head;
 	Node* curr2 = StrList2->_head;
